@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { boardLayout } from "../../constants/gameBoardConstants";
 import generateShips from "../../shared/utils/generateShipData";
+import { boardRowStyle, headerCellStyle } from "./styles";
 import {
   boardCellStyle,
-  boardRowStyle,
   hitCellStyle,
   missedCellStyle,
-} from "./styles";
+} from "../../shared/styles/styles";
+import { GameBoardProps } from "./types";
 
-function GameBoard() {
+function GameBoard({ consumeBullet, updateHits }: GameBoardProps) {
   const [markedData, setMarkedData] = useState(new Map());
   const [shipData, setShipData] = useState(new Map());
 
@@ -20,8 +21,13 @@ function GameBoard() {
     setMarkedData((prev: Map<string, number>) => {
       const newMap = new Map(prev);
 
-      if (success) newMap.set(`${x}-${y}`, 1);
-      else newMap.set(`${x}-${y}`, -1);
+      if (success) {
+        newMap.set(`${x}-${y}`, 1);
+        updateHits();
+      } else {
+        newMap.set(`${x}-${y}`, -1);
+        consumeBullet();
+      }
 
       return newMap;
     });
@@ -29,7 +35,7 @@ function GameBoard() {
 
   const isShotSuccessful = (x: number, y: number) => shipData.has(`${x}-${y}`);
 
-  const getCellColor = (x: number, y: number) => {
+  const getCellStyle = (x: number, y: number) => {
     const boardEntry = markedData.get(`${x}-${y}`);
     switch (boardEntry) {
       case 1:
@@ -50,12 +56,24 @@ function GameBoard() {
 
   return (
     <>
+      <div style={boardRowStyle}>
+        <div style={{ ...boardCellStyle, ...headerCellStyle }}></div>
+        {boardLayout.map((_, index) => (
+          <div
+            key={`col-header ${index}`}
+            style={{ ...boardCellStyle, ...headerCellStyle }}
+          >
+            {String.fromCharCode(65 + index)}
+          </div>
+        ))}
+      </div>
       {boardLayout.map((row, i) => (
         <div key={`row ${i}`} style={boardRowStyle}>
-          {row.map((cell, j) => (
+          <div style={{ ...boardCellStyle, ...headerCellStyle }}>{i + 1}</div>
+          {row.map((_, j) => (
             <div
               key={`cell ${i}-${j}`}
-              style={{ ...boardCellStyle, ...getCellColor(i, j) }}
+              style={{ ...boardCellStyle, ...getCellStyle(i, j) }}
               onClick={() => handleCellClick(i, j)}
             ></div>
           ))}
