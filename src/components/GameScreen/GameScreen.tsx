@@ -8,7 +8,14 @@ import {
   statisticsHeader,
 } from "./styles";
 
-function GameScreen({ bullets, consumeBullet, updateHits }: GameScreenProps) {
+function GameScreen({
+  markedData,
+  setMarkedData,
+  bullets,
+  consumeBullet,
+  updateHits,
+  isShotSuccessful,
+}: GameScreenProps) {
   return (
     <>
       <div style={mainContainer}>
@@ -18,8 +25,11 @@ function GameScreen({ bullets, consumeBullet, updateHits }: GameScreenProps) {
             <h2>Shots remaning: {bullets}</h2>
           </div>
           <GameBoard
+            markedData={markedData}
+            setMarkedData={setMarkedData}
             consumeBullet={() => consumeBullet()}
             updateHits={() => updateHits()}
+            isShotSuccessful={isShotSuccessful}
           />
         </div>
         <ShipInformation />

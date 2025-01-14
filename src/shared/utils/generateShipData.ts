@@ -1,10 +1,14 @@
 import { ShipInfo } from "../types/types";
 import { ships } from "../../constants/gameBoardConstants";
+import { markShipBufferZone } from "./markShipBufferZone";
 
 const generateShips = (grid: number[][]) => {
   const gridSize = grid.length;
   const shipData = new Map();
 
+  const bufferZone = Array.from({ length: grid.length }, () =>
+    Array(grid[0].length).fill(0)
+  );
   const placeShip = (ship: ShipInfo) => {
     let amountPlaced = 0;
 
@@ -17,13 +21,14 @@ const generateShips = (grid: number[][]) => {
       const coordinates = [];
 
       for (let i = 0; i < ship.size; i++) {
-        const newRow = isHorizontal ? row : row + i;
-        const newCollumn = isHorizontal ? col + i : col;
+        const newRow = (isHorizontal ? row : row + i) + 1;
+        const newCollumn = (isHorizontal ? col + i : col) + 1;
 
         if (
+          bufferZone[newRow - 1][newCollumn - 1] === 1 ||
           newRow >= gridSize ||
           newCollumn >= gridSize ||
-          grid[newRow][newCollumn] === 1 ||
+          grid[newRow - 1][newCollumn - 1] === 1 ||
           shipData.has(`${newRow}-${newCollumn}`)
         ) {
           validPlacement = false;
@@ -42,6 +47,8 @@ const generateShips = (grid: number[][]) => {
         });
 
         amountPlaced++;
+
+        markShipBufferZone(bufferZone, coordinates, gridSize);
       }
     }
   };
