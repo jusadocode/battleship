@@ -2,7 +2,7 @@
 
 This project contains the frontend of the Battleship game.
 
-You can find server side of the project [here](https://github.com/jusadocode/battleship-server).
+**You can find the server side of the project [here](https://github.com/jusadocode/battleship-server).**
 
 ## Prerequisites
 
