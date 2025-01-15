@@ -4,6 +4,10 @@ export const mainContainer: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  justifyContent: "space-evenly",
-  height: "100vh",
+  gap: "5rem",
+};
+export const resultContainer: CSSProperties = {
+  width: "80vw",
+  display: "flex",
+  justifyContent: "space-between",
 };

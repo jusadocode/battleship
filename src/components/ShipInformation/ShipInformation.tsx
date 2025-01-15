@@ -1,6 +1,6 @@
 import { boardCellStyle, hitCellStyle } from "../../shared/styles/styles";
 import { mainContainer, shipLengthHolder } from "./styles";
-import { ships } from "../../constants/gameBoardConstants";
+import { ships } from "../../shared/constants/gameBoardConstants";
 
 function ShipInformation() {
   return (

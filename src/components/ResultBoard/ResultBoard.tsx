@@ -1,9 +1,10 @@
-import { boardLayout } from "../../constants/gameBoardConstants";
+import { boardLayout } from "../../shared/constants/gameBoardConstants";
 import { boardRowStyle, headerCellStyle, remainingCellStyle } from "./styles";
 import {
   boardCellStyle,
   hitCellStyle,
   missedCellStyle,
+  destroyedCellStyle,
 } from "../../shared/styles/styles";
 import { ResultBoardProps } from "./types";
 
@@ -11,6 +12,8 @@ function ResultBoard({ markedData }: ResultBoardProps) {
   const getCellStyle = (x: number, y: number) => {
     const boardEntry = markedData.get(`${x}-${y}`);
     switch (boardEntry) {
+      case 2:
+        return destroyedCellStyle;
       case 1:
         return hitCellStyle;
       case -1:

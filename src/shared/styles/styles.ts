@@ -4,6 +4,7 @@ import cross from "../../assets/cross.png";
 export const boardColor: string = "rgb(0, 107, 214)";
 export const missedCellColor: string = "rgb(151, 151, 151)";
 export const hitCellColor: string = "rgb(236, 64, 122)";
+export const destroyedCellColor: string = "rgb(255, 161, 21)";
 
 export const boardCellStyle: CSSProperties = {
   minWidth: "1rem",
@@ -28,4 +29,9 @@ export const hitCellStyle: CSSProperties = {
   backgroundSize: "25%",
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
+};
+
+export const destroyedCellStyle: CSSProperties = {
+  ...hitCellStyle,
+  backgroundColor: `${destroyedCellColor}`,
 };

@@ -8,14 +8,7 @@ import {
   statisticsHeader,
 } from "./styles";
 
-function GameScreen({
-  markedData,
-  setMarkedData,
-  bullets,
-  consumeBullet,
-  updateHits,
-  isShotSuccessful,
-}: GameScreenProps) {
+function GameScreen({ markedData, bullets, handleShot }: GameScreenProps) {
   return (
     <>
       <div style={mainContainer}>
@@ -24,13 +17,7 @@ function GameScreen({
           <div style={statisticsHeader}>
             <h2>Shots remaning: {bullets}</h2>
           </div>
-          <GameBoard
-            markedData={markedData}
-            setMarkedData={setMarkedData}
-            consumeBullet={() => consumeBullet()}
-            updateHits={() => updateHits()}
-            isShotSuccessful={isShotSuccessful}
-          />
+          <GameBoard markedData={markedData} handleShot={handleShot} />
         </div>
         <ShipInformation />
       </div>

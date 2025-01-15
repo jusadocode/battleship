@@ -1,8 +1,8 @@
-import { ShipInfo } from "../../shared/types/types";
+import { Ship } from "../../shared/types/types";
 
 export interface EndGameScreenProps {
   hits: number;
-  shipsDestroyed: ShipInfo[];
+  shipsDestroyed: Ship[];
   handleRestartClick: () => void;
   markedData: Map<string, number>;
 }

@@ -1,4 +1,4 @@
-import { ShipInfo } from "../shared/types/types";
+import { ShipInfo } from "../types/types";
 
 export const boardWidth = 10;
 export const boardHeight = 10;

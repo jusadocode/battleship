@@ -1,42 +1,23 @@
-import { boardLayout } from "../../constants/gameBoardConstants";
+import { boardLayout } from "../../shared/constants/gameBoardConstants";
 import { boardRowStyle, headerCellStyle, remainingCellStyle } from "./styles";
 import {
   boardCellStyle,
+  destroyedCellStyle,
   hitCellStyle,
   missedCellStyle,
 } from "../../shared/styles/styles";
 import { GameBoardProps } from "./types";
 
-function GameBoard({
-  markedData,
-  setMarkedData,
-  consumeBullet,
-  updateHits,
-  isShotSuccessful,
-}: GameBoardProps) {
+function GameBoard({ markedData, handleShot }: GameBoardProps) {
   const handleCellClick = (x: number, y: number) => {
-    if (markedData.has(`${x}-${y}`)) return;
-
-    const success: boolean = isShotSuccessful(x, y);
-
-    setMarkedData((prev: Map<string, number>) => {
-      const newMap = new Map(prev);
-
-      if (success) {
-        newMap.set(`${x}-${y}`, 1);
-        updateHits();
-      } else {
-        newMap.set(`${x}-${y}`, -1);
-        consumeBullet();
-      }
-
-      return newMap;
-    });
+    handleShot(x, y);
   };
 
   const getCellStyle = (x: number, y: number) => {
     const boardEntry = markedData.get(`${x}-${y}`);
     switch (boardEntry) {
+      case 2:
+        return destroyedCellStyle;
       case 1:
         return hitCellStyle;
       case -1:

@@ -9,6 +9,7 @@ import {
 } from "./styles";
 import {
   boardCellStyle,
+  destroyedCellStyle,
   hitCellStyle,
   missedCellStyle,
 } from "../../shared/styles/styles";
@@ -52,6 +53,12 @@ function InstructionsSection() {
             <div style={{ ...boardCellStyle, ...missedCellStyle }}></div>
             <h4>-</h4>
             <h4>Missed shot</h4>
+          </div>
+
+          <div style={cellInfoEntry}>
+            <div style={{ ...boardCellStyle, ...destroyedCellStyle }}></div>
+            <h4>-</h4>
+            <h4>Ship destroyed</h4>
           </div>
         </div>
 

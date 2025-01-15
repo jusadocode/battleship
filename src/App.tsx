@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
-import { boardLayout, bulletAmount } from "./constants/gameBoardConstants";
+import { bulletAmount } from "./shared/constants/gameBoardConstants";
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen";
 import StartScreen from "./components/StartScreen/StartScreen";
 import GameScreen from "./components/GameScreen/GameScreen";
-import generateShips from "./shared/utils/generateShipData";
+import { useGameService } from "./shared/hooks/useGameService";
+import { Ship } from "./shared/types/types";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameStopped, setGameStopped] = useState(false);
   const [bullets, setBullets] = useState(25);
   const [hits, setHits] = useState(0);
-  const [shipsDestroyed, setShipsDestroyed] = useState([]);
+  const [shipsDestroyed, setShipsDestroyed] = useState<Ship[]>([]);
   const [markedData, setMarkedData] = useState(new Map());
-  const [shipData, setShipData] = useState(new Map());
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { createGame, registerShot, getEndGameState } = useGameService();
 
   const handleStartClick = () => {
-    // fetch info from the server for the game start
-    setGameStarted(true);
+    initiateGameStart();
   };
 
   const consumeBullet = () => {
@@ -28,48 +30,104 @@ function App() {
     }
   };
 
-  const initiateGameEnd = () => {
-    setGameStopped(true);
-    setGameStarted(false);
-
-    const updatedMarkedData = new Map(markedData);
-
-    shipData.forEach((_: string, key: string) => {
-      if (!updatedMarkedData.has(key)) updatedMarkedData.set(key, 0);
-    });
-
-    setMarkedData(updatedMarkedData);
+  const initiateGameStart = () => {
+    setIsLoading(true);
+    createGame()
+      .then(() => {
+        setGameStarted(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
-  const isShotSuccessful = (x: number, y: number) => shipData.has(`${x}-${y}`);
+  const initiateGameEnd = () => {
+    getEndGameState()
+      .then((response) => {
+        if (!response) {
+          console.error("Failed to get the end game state.");
+          return;
+        }
 
-  const updateHits = () => setHits(hits + 1);
+        const resultShipData: Map<string, string> = new Map(
+          Object.entries(response.coordinateMap)
+        );
+
+        const updatedMarkedData = new Map(markedData);
+
+        resultShipData.forEach((_: string, key: string) => {
+          if (!updatedMarkedData.has(key)) updatedMarkedData.set(key, 0);
+        });
+
+        setMarkedData(updatedMarkedData);
+
+        setGameStopped(true);
+        setGameStarted(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const handleShot = (x: number, y: number) => {
+    if (markedData.has(`${x}-${y}`)) return;
+
+    registerShot(x, y).then((response) => {
+      if (response) {
+        setMarkedData((prev: Map<string, number>) => {
+          const newMap = new Map(prev);
+
+          if (response.hit) {
+            newMap.set(`${x}-${y}`, 1);
+            updateHits();
+          } else {
+            newMap.set(`${x}-${y}`, -1);
+            consumeBullet();
+          }
+
+          if (response.shipDestroyed) {
+            response.shipDestroyed.coordinates.forEach(([row, col]) => {
+              newMap.set(`${row}-${col}`, 2);
+            });
+          }
+
+          return newMap;
+        });
+
+        setShipsDestroyed((prev: Ship[]) => {
+          return response.shipDestroyed
+            ? [...prev, response.shipDestroyed]
+            : prev;
+        });
+      }
+    });
+  };
+
+  const updateHits = () => {
+    if (hits + 1 === 24) {
+      initiateGameEnd();
+    }
+    setHits(hits + 1);
+  };
 
   const handleRestartClick = () => {
-    const generatedData = generateShips(boardLayout);
-    setShipData(generatedData);
     setBullets(bulletAmount);
     setMarkedData(new Map());
     setHits(0);
     setShipsDestroyed([]);
-    setGameStarted(true);
     setGameStopped(false);
+    initiateGameStart();
   };
 
-  useEffect(() => {
-    // transfer this to server later
-    const generatedData = generateShips(boardLayout);
-    setShipData(generatedData);
-  }, []);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return gameStarted ? (
     <GameScreen
       bullets={bullets}
-      consumeBullet={consumeBullet}
-      updateHits={updateHits}
-      setMarkedData={setMarkedData}
       markedData={markedData}
-      isShotSuccessful={isShotSuccessful}
+      handleShot={handleShot}
     />
   ) : gameStopped ? (
     <EndGameScreen
