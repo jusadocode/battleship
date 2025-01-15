@@ -4,16 +4,6 @@ export interface ShipInfo {
   amount: number;
 }
 
-export interface ShipData {
-  name: string;
-  coordinates: number[][];
-}
-
-export interface ShipPlacementEntry {
-  coordinate: string;
-  shipID: string;
-}
-
 export interface Ship {
   name: string;
   coordinates: number[][];
@@ -24,14 +14,6 @@ export interface EndGameResponse {
   coordinateMap: { [key: string]: string };
   hitsCount: number;
   bulletsCount: number;
-}
-
-export interface ShootRequest {
-  gameId: string;
-  coordinates: {
-    x: number;
-    y: number;
-  };
 }
 
 export interface ShotResponse {

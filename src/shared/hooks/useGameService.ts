@@ -41,6 +41,7 @@ export const useGameService = () => {
       return responseData;
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
@@ -69,6 +70,7 @@ export const useGameService = () => {
       return responseData;
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
@@ -96,6 +98,7 @@ export const useGameService = () => {
       return gameState;
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 

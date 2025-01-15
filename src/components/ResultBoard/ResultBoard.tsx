@@ -1,10 +1,11 @@
 import { boardLayout } from "../../shared/constants/gameBoardConstants";
-import { boardRowStyle, headerCellStyle, remainingCellStyle } from "./styles";
+import { boardRowStyle, remainingCellStyle } from "./styles";
 import {
   boardCellStyle,
   hitCellStyle,
   missedCellStyle,
   destroyedCellStyle,
+  headerCellStyle,
 } from "../../shared/styles/styles";
 import { ResultBoardProps } from "./types";
 
@@ -29,23 +30,20 @@ function ResultBoard({ markedData }: ResultBoardProps) {
     <>
       <div>
         <div style={boardRowStyle}>
-          <div style={{ ...boardCellStyle, ...headerCellStyle }}></div>
+          <div style={headerCellStyle}></div>
           {boardLayout.map((_, index) => (
-            <div
-              key={`col-header ${index}`}
-              style={{ ...boardCellStyle, ...headerCellStyle }}
-            >
+            <div key={`col-header ${index}`} style={headerCellStyle}>
               {String.fromCharCode(65 + index)}
             </div>
           ))}
         </div>
         {boardLayout.map((row, i) => (
           <div key={`row ${i + 1}`} style={boardRowStyle}>
-            <div style={{ ...boardCellStyle, ...headerCellStyle }}>{i + 1}</div>
+            <div style={headerCellStyle}>{i + 1}</div>
             {row.map((_, j) => (
               <div
                 key={`cell ${i + 1}-${j + 1}`}
-                style={{ ...boardCellStyle, ...getCellStyle(i + 1, j + 1) }}
+                style={getCellStyle(i + 1, j + 1)}
               ></div>
             ))}
           </div>

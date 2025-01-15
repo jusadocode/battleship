@@ -15,7 +15,7 @@ function GameScreen({ markedData, bullets, handleShot }: GameScreenProps) {
         <InstructionsSection />
         <div style={interactiveContainer}>
           <div style={statisticsHeader}>
-            <h2>Shots remaning: {bullets}</h2>
+            <h2>Shots remaining: {bullets}</h2>
           </div>
           <GameBoard markedData={markedData} handleShot={handleShot} />
         </div>

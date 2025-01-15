@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { bulletAmount } from "./shared/constants/gameBoardConstants";
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen";
@@ -6,6 +6,7 @@ import StartScreen from "./components/StartScreen/StartScreen";
 import GameScreen from "./components/GameScreen/GameScreen";
 import { useGameService } from "./shared/hooks/useGameService";
 import { Ship } from "./shared/types/types";
+import ServerError from "./components/ServerError/ServerError";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -15,6 +16,7 @@ function App() {
   const [shipsDestroyed, setShipsDestroyed] = useState<Ship[]>([]);
   const [markedData, setMarkedData] = useState(new Map());
   const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState(false);
 
   const { createGame, registerShot, getEndGameState } = useGameService();
 
@@ -35,6 +37,9 @@ function App() {
     createGame()
       .then(() => {
         setGameStarted(true);
+      })
+      .catch(() => {
+        setServerError(true);
       })
       .finally(() => {
         setIsLoading(false);
@@ -64,6 +69,9 @@ function App() {
         setGameStopped(true);
         setGameStarted(false);
       })
+      .catch(() => {
+        setServerError(true);
+      })
       .finally(() => {
         setIsLoading(false);
       });
@@ -72,17 +80,15 @@ function App() {
   const handleShot = (x: number, y: number) => {
     if (markedData.has(`${x}-${y}`)) return;
 
-    registerShot(x, y).then((response) => {
-      if (response) {
-        setMarkedData((prev: Map<string, number>) => {
-          const newMap = new Map(prev);
+    registerShot(x, y)
+      .then((response) => {
+        if (response) {
+          const newMap = new Map(markedData);
 
           if (response.hit) {
             newMap.set(`${x}-${y}`, 1);
-            updateHits();
           } else {
             newMap.set(`${x}-${y}`, -1);
-            consumeBullet();
           }
 
           if (response.shipDestroyed) {
@@ -91,22 +97,27 @@ function App() {
             });
           }
 
-          return newMap;
-        });
+          setMarkedData(newMap);
 
-        setShipsDestroyed((prev: Ship[]) => {
-          return response.shipDestroyed
-            ? [...prev, response.shipDestroyed]
-            : prev;
-        });
-      }
-    });
+          setShipsDestroyed((prev: Ship[]) => {
+            return response.shipDestroyed
+              ? [...prev, response.shipDestroyed]
+              : prev;
+          });
+
+          if (response.hit) {
+            updateHits();
+          } else {
+            consumeBullet();
+          }
+        }
+      })
+      .catch(() => {
+        setServerError(true);
+      });
   };
 
   const updateHits = () => {
-    if (hits + 1 === 24) {
-      initiateGameEnd();
-    }
     setHits(hits + 1);
   };
 
@@ -116,12 +127,20 @@ function App() {
     setHits(0);
     setShipsDestroyed([]);
     setGameStopped(false);
+    setServerError(false);
     initiateGameStart();
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if (hits === 24) {
+      initiateGameEnd();
+    }
+  }, [hits]);
+
+  if (isLoading) return <h2>Loading...</h2>;
+
+  if (serverError)
+    return <ServerError handleRestartClick={handleRestartClick} />;
 
   return gameStarted ? (
     <GameScreen

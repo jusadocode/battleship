@@ -4,7 +4,7 @@ function StartScreen({ handleStartClick }: StartScreenProps) {
   return (
     <>
       <div>
-        <button onClick={handleStartClick}>Begin</button>
+        <button onClick={handleStartClick}>Begin Operation</button>
       </div>
     </>
   );

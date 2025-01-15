@@ -18,12 +18,20 @@ export const boardCellStyle: CSSProperties = {
   transition: "background-color 0.5s ease-in-out, background-image 3s ease-in",
 };
 
+export const headerCellStyle: CSSProperties = {
+  ...boardCellStyle,
+  backgroundColor: `${boardColor}`,
+  cursor: "normal",
+};
+
 export const missedCellStyle: CSSProperties = {
+  ...boardCellStyle,
   cursor: "not-allowed",
   backgroundColor: `${missedCellColor}`,
 };
 
 export const hitCellStyle: CSSProperties = {
+  ...boardCellStyle,
   backgroundColor: `${hitCellColor}`,
   backgroundImage: `url('${cross}')`,
   backgroundSize: "25%",

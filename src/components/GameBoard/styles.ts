@@ -6,11 +6,6 @@ export const boardRowStyle: CSSProperties = {
   display: "flex",
 };
 
-export const headerCellStyle: CSSProperties = {
-  backgroundColor: `${boardColor}`,
-  cursor: "normal",
-};
-
 export const remainingCellStyle: CSSProperties = {
   ...hitCellStyle,
   backgroundImage: "none",

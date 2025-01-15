@@ -1,4 +1,4 @@
-import { boardCellStyle, hitCellStyle } from "../../shared/styles/styles";
+import { hitCellStyle } from "../../shared/styles/styles";
 import { mainContainer, shipLengthHolder } from "./styles";
 import { ships } from "../../shared/constants/gameBoardConstants";
 
@@ -12,10 +12,7 @@ function ShipInformation() {
             <h3>{ship.name}</h3>
             <div style={shipLengthHolder}>
               {Array.from({ length: ship.size }).map((_, index) => (
-                <div
-                  key={`${ship.name}-${index}`}
-                  style={{ ...boardCellStyle, ...hitCellStyle }}
-                />
+                <div key={`${ship.name}-${index}`} style={hitCellStyle} />
               ))}
             </div>
           </div>

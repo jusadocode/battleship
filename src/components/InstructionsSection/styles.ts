@@ -52,3 +52,12 @@ export const cellInfoEntry: CSSProperties = {
   display: "flex",
   gap: "1rem",
 };
+
+export const stepsContainer: CSSProperties = {
+  display: "flex",
+  gap: " 2rem",
+};
+
+export const quantitiesList: CSSProperties = {
+  marginLeft: "1rem",
+};

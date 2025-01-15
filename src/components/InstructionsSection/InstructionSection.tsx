@@ -6,9 +6,10 @@ import {
   descriptionContainer,
   descriptionContainerVisible,
   mainContainer,
+  quantitiesList,
+  stepsContainer,
 } from "./styles";
 import {
-  boardCellStyle,
   destroyedCellStyle,
   hitCellStyle,
   missedCellStyle,
@@ -44,19 +45,19 @@ function InstructionsSection() {
         <div style={cellInfoContainer}>
           <h2>Colors:</h2>
           <div style={cellInfoEntry}>
-            <div style={{ ...boardCellStyle, ...hitCellStyle }}></div>
+            <div style={hitCellStyle}></div>
             <h4>-</h4>
             <h4>Successful hit</h4>
           </div>
 
           <div style={cellInfoEntry}>
-            <div style={{ ...boardCellStyle, ...missedCellStyle }}></div>
+            <div style={missedCellStyle}></div>
             <h4>-</h4>
             <h4>Missed shot</h4>
           </div>
 
           <div style={cellInfoEntry}>
-            <div style={{ ...boardCellStyle, ...destroyedCellStyle }}></div>
+            <div style={destroyedCellStyle}></div>
             <h4>-</h4>
             <h4>Ship destroyed</h4>
           </div>
@@ -84,7 +85,7 @@ function InstructionsSection() {
               </p>
 
               <h2>Gameplay</h2>
-              <div style={{ display: "flex", gap: " 2rem" }}>
+              <div style={stepsContainer}>
                 <div>
                   1. The computer secretly places its ships on the game board.
                 </div>
@@ -106,7 +107,7 @@ function InstructionsSection() {
                 The computer will secretly place the following ships on the
                 board:
               </p>
-              <div style={{ marginLeft: "1rem" }}>
+              <div style={quantitiesList}>
                 <div>- 1 Aircraft Carrier</div>
                 <div>- 1 Battleship</div>
                 <div>- 2 Destroyers</div>
